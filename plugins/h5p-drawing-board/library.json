@@ -1,0 +1,22 @@
+
+{
+    "title": "Drawing Board",
+    "description": "Displays a simple drawing board",
+    "majorVersion": 1,
+    "minorVersion": 0,
+    "patchVersion": 0,
+    "runnable": 1,
+    "author": "Stefan Wintergerst",
+    "license": "MIT",
+    "machineName": "H5P.DrawingBoard",
+    "coreApi": {
+      "majorVersion": 1,
+      "minorVersion": 0
+    },
+    "preloadedJs": [
+      { "path": "drawing-board.js" }
+    ],
+    "preloadedCss": [
+      {"path": "drawing-board.css"}
+    ]
+  }

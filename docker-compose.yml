@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  drupal-h5p-dev:
+    image: sr258/drupal-h5p-docker:latest
+    ports: 
+      - 8080:80
+    restart: always
+    volumes: # 'symlink' the plugins directory to the h5p dev directory
+      - ./plugins/:/var/www/html/sites/default/files/h5p/development

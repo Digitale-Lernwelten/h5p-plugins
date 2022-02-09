@@ -1,0 +1,15 @@
+.h5p-drawing-board {
+  /* border: 1px solid red; */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.h5p-drawing-board > .drawing-board-title {
+  text-align: center;
+}
+
+.h5p-drawing-board > .drawing-board-canvas {
+  border: 2px solid black;
+  border-radius: 5px;
+}

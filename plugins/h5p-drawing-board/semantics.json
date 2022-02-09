@@ -1,0 +1,10 @@
+
+[ 
+    { 
+      "label": "Description", 
+      "name": "description", 
+      "type": "text", 
+      "default": "Draw something!", 
+      "description": "The description displayed above the drawing board."
+    }
+]
