@@ -20,3 +20,12 @@ Docker image taken from [sr258/drupal-h5p-docker](https://github.com/sr258/drupa
 5. Scroll down to `Other`, click on `configure` on `H5P`
 6. Tick `Enable H5P development mode`
 7. Tick `Enable library development directory (For programmers only)`
+
+
+## Plugins
+
+### H5P Drawing Board
+
+A simple canvas drawing board.
+
+![image](./assets/drawing-board.png)

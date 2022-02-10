@@ -50,15 +50,15 @@ H5P.DrawingBoard = (function (_$) {
 
 		$container.append(`
 			<div id="control-container-${this.id}" class="drawing-board-controls">
-				<button id="clear-button-${this.id}">Loeschen</button>
+				<button id="clear-button-${this.id}">Löschen</button>
 				<button id="decrease-brush-size-large-${this.id}">&minus;&minus;</button>
 				<button id="decrease-brush-size-${this.id}">&minus;</button>
 				<p id="brush-size-text-${this.id}">${brushSize}</p>
 				<button id="increase-brush-size-${this.id}">&plus;</button>
 				<button id="increase-brush-size-large-${this.id}">&plus;&plus;</button>
-				<button class="red active" id="red-${this.id}">Red</button>
-				<button class="blue" id="blue-${this.id}">Blue</button>
-				<button class="green" id="green-${this.id}">Green</button>
+				<button class="red active" id="red-${this.id}">Rot</button>
+				<button class="blue" id="blue-${this.id}">Blau</button>
+				<button class="green" id="green-${this.id}">Grün</button>
 			</div>
 		`);
 		const clearButton = document.getElementById(`clear-button-${this.id}`);
@@ -171,7 +171,7 @@ H5P.DrawingBoard = (function (_$) {
 
 		$container.append(`
 			<div class="help-container">
-				<p>Um das Bild zu speichern, Rechtsklick auf die Zeichenflaeche -> Bild speichern als...</p>
+				<p>Um das Bild zu speichern, Rechtsklick auf die Zeichenfläche -> Bild speichern als...</p>
 			</div>
 		`);
 	};
