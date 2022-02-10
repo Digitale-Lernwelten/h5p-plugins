@@ -45,21 +45,135 @@ H5P.DrawingBoard = (function (_$) {
 			);
 		}
 
+		let brushSize = 2;
+		let color = this.colors.red;
+
+		$container.append(`
+			<div id="control-container-${this.id}" class="drawing-board-controls">
+				<button id="clear-button-${this.id}">Loeschen</button>
+				<button id="decrease-brush-size-large-${this.id}">&minus;&minus;</button>
+				<button id="decrease-brush-size-${this.id}">&minus;</button>
+				<p id="brush-size-text-${this.id}">${brushSize}</p>
+				<button id="increase-brush-size-${this.id}">&plus;</button>
+				<button id="increase-brush-size-large-${this.id}">&plus;&plus;</button>
+				<button class="red active" id="red-${this.id}">Red</button>
+				<button class="blue" id="blue-${this.id}">Blue</button>
+				<button class="green" id="green-${this.id}">Green</button>
+			</div>
+		`);
+		const clearButton = document.getElementById(`clear-button-${this.id}`);
+		const decreaseBrushSizeButton = document.getElementById(`decrease-brush-size-${this.id}`);
+		const decreaseBrushSizeLargeButton = document.getElementById(`decrease-brush-size-large-${this.id}`);
+		const increaseBrushSizeButton = document.getElementById(`increase-brush-size-${this.id}`);
+		const increaseBrushSizeLargeButton = document.getElementById(`increase-brush-size-large-${this.id}`);
+		const brushSizeText = document.getElementById(`brush-size-text-${this.id}`);
+
+		const addToBrushSize = n => {
+			if (brushSize + n < 1) {
+				return;
+			}
+
+			brushSize += n;
+			brushSizeText.innerHTML = `${brushSize}`;
+		};
+
+		increaseBrushSizeButton.onclick = () => addToBrushSize(1);
+		increaseBrushSizeLargeButton.onclick = () => addToBrushSize(5);
+		decreaseBrushSizeButton.onclick = () => addToBrushSize(-1);
+		decreaseBrushSizeLargeButton.onclick = () => addToBrushSize(-5);
+
+		const redButton = document.getElementById(`red-${this.id}`);
+		const blueButton = document.getElementById(`blue-${this.id}`);
+		const greenButton = document.getElementById(`green-${this.id}`);
+
+		const setColor = c => {
+			color = c;
+		};
+
+		redButton.onclick = () => {
+			setColor(this.colors.red);
+			redButton.classList.add('active');
+			greenButton.classList.remove('active');
+			blueButton.classList.remove('active');
+		};
+
+		blueButton.onclick = () => {
+			setColor(this.colors.blue);
+			redButton.classList.remove('active');
+			blueButton.classList.add('active');
+			greenButton.classList.remove('active');
+		};
+
+		greenButton.onclick = () => {
+			setColor(this.colors.green);
+			redButton.classList.remove('active');
+			blueButton.classList.remove('active');
+			greenButton.classList.add('active');
+		};
+
 		$container.append(
-			`<canvas id="drawing-canvas-${this.id}" class="drawing-board-canvas"></canvas>`,
+			`<canvas id="drawing-canvas-${this.id}" class="drawing-board-canvas" height=500></canvas>`,
 		);
 
 		/** @type {HTMLCanvasElement} */
 		const canvas = document.getElementById(`drawing-canvas-${this.id}`);
+		// necessary to avoid blurryness
+		canvas.width = canvas.offsetWidth;
+		canvas.height = canvas.offsetHeight;
 		const ctx = canvas.getContext('2d');
+		// crank quality
+		ctx.imageSmoothingEnabled = true;
+		ctx.imageSmoothingQuality = 'high';
 
-		canvas.onclick = e => {
-			const {x, y} = getMousePosition(canvas, e);
-			console.log(`click at: ${x} ${y}`);
-			ctx.beginPath();
-			ctx.arc(x, y, 10, 0, 2 * Math.PI);
-			ctx.fill();
+		const clearCanvas = () => {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.fillStyle = 'rgba(255,255,255,1)';
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
 		};
+
+		clearButton.onclick = clearCanvas;
+		clearCanvas();
+
+		let isDrawing = false;
+
+		canvas.onmousedown = e => {
+			if (e.button === 0) {
+				isDrawing = true;
+			}
+		};
+
+		let prevX = 0;
+		let prevY = 0;
+
+		canvas.onmousemove = e => {
+			const {x, y} = getMousePosition(canvas, e);
+			if (isDrawing) {
+				ctx.fillStyle = this.colors.red;
+				ctx.beginPath();
+				ctx.lineCap = 'round';
+				ctx.lineWidth = brushSize;
+				ctx.strokeStyle = color;
+				ctx.moveTo(prevX, prevY);
+				ctx.lineTo(x, y);
+				ctx.stroke();
+				ctx.closePath();
+			}
+
+			prevX = x;
+			prevY = y;
+		};
+
+		canvas.onmouseup = e => {
+			if (e.button === 0) {
+				isDrawing = false;
+			}
+		};
+
+		$container.append(`
+			<div class="help-container">
+				<p>Um das Bild zu speichern, Rechtsklick auf die Zeichenflaeche -> Bild speichern als...</p>
+			</div>
+		`);
 	};
 
 	return C;

@@ -5,11 +5,89 @@
   box-sizing: border-box;
 }
 
+.h5p-drawing-board * {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
 .h5p-drawing-board > .drawing-board-title {
   text-align: center;
+}
+
+.h5p-drawing-board > .drawing-board-controls {
+  border: 2px solid black;
+  border-radius: 5px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.drawing-board-controls > button {
+  margin-left: 3px;
+  margin-right: 3px;
+  display: inline-block;
+  outline: 0;
+  cursor: pointer;
+  text-align: center;
+  padding: 7px 16px;
+  min-height: 36px;
+  max-height: 36px;
+  min-width: 36px;
+  color: black;
+  background: white;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 14px;
+  border: 1px solid black;
+}
+
+.drawing-board-controls > button.green {
+  background-color: white;
+  color: green;
+}
+
+.drawing-board-controls > button.green.active {
+  background-color: green;
+  color: white;
+}
+
+.drawing-board-controls > button.red {
+  background-color: white;
+  color: red;
+}
+
+.drawing-board-controls > button.red.active {
+  background-color: red;
+  color: white;
+}
+
+.drawing-board-controls > button.blue {
+  background-color: white;
+  color: blue;
+}
+
+.drawing-board-controls > button.blue.active {
+  background-color: blue;
+  color: white;
+}
+
+.drawing-board-controls > a {
+  padding: 5px;
+}
+
+.drawing-board-controls > p {
+  padding: 3px;
+  display: inline;
+  margin-bottom: 0;
 }
 
 .h5p-drawing-board > .drawing-board-canvas {
   border: 2px solid black;
   border-radius: 5px;
+}
+
+.h5p-drawing-board > .help-container > p {
+  text-align: center;
 }
