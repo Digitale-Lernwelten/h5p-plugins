@@ -1,4 +1,6 @@
 # h5p-plugins
+[![Node.js CI](https://github.com/Digitale-Lernwelten/h5p-plugins/actions/workflows/node.yml/badge.svg)](https://github.com/Digitale-Lernwelten/h5p-plugins/actions/workflows/node.yml)
+
 
 Docker image taken from [sr258/drupal-h5p-docker](https://github.com/sr258/drupal-h5p-docker).
 
