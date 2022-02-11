@@ -10,7 +10,12 @@
 }
 
 .h5p-drawing-board > .drawing-board-title {
-  text-align: center;
+  font-size: 36px;
+  margin: 5px;
+}
+
+.h5p-drawing-board > .drawing-board-description {
+  margin: 5px;
 }
 
 .h5p-drawing-board > .drawing-board-controls {
@@ -88,6 +93,6 @@
   border-radius: 5px;
 }
 
-.h5p-drawing-board > .help-container > p {
-  text-align: center;
+.h5p-drawing-board > .help-container {
+  margin: 5px;
 }

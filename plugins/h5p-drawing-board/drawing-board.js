@@ -19,7 +19,9 @@ const getMousePosition = (canvas, evt) => {
 H5P.DrawingBoard = (function (_$) {
 	/**
 	 * @param {Object} options
+	 * @param {string} options.header
 	 * @param {string} options.description
+	 * @param {string} options.subDescription
 	 * @param {number} id
 	 */
 	function C(options, id) {
@@ -39,9 +41,16 @@ H5P.DrawingBoard = (function (_$) {
    	 */
 	C.prototype.attach = function ($container) {
 		$container.addClass('h5p-drawing-board');
-		if (this.options.description) {
+		const {header, description, subDescription} = this.options;
+		if (header) {
 			$container.append(
-				`<h1 class="drawing-board-title">${this.options.description}</h1>`,
+				`<h1 class="drawing-board-title">${header}</h1>`,
+			);
+		}
+
+		if (description) {
+			$container.append(
+				`<p class="drawing-board-description">${description}</p>`,
 			);
 		}
 
@@ -50,15 +59,15 @@ H5P.DrawingBoard = (function (_$) {
 
 		$container.append(`
 			<div id="control-container-${this.id}" class="drawing-board-controls">
-				<button id="clear-button-${this.id}">Löschen</button>
-				<button id="decrease-brush-size-large-${this.id}">&minus;&minus;</button>
-				<button id="decrease-brush-size-${this.id}">&minus;</button>
+				<button id="clear-button-${this.id}" title="Zeichenfläche löschen">Löschen</button>
+				<button id="decrease-brush-size-large-${this.id}" title="Radius verkleinern">&minus;&minus;</button>
+				<button id="decrease-brush-size-${this.id}" title="Radius verkleinern">&minus;</button>
 				<p id="brush-size-text-${this.id}">${brushSize}</p>
-				<button id="increase-brush-size-${this.id}">&plus;</button>
-				<button id="increase-brush-size-large-${this.id}">&plus;&plus;</button>
-				<button class="red active" id="red-${this.id}">Rot</button>
-				<button class="blue" id="blue-${this.id}">Blau</button>
-				<button class="green" id="green-${this.id}">Grün</button>
+				<button id="increase-brush-size-${this.id}" title="Radius vergrößern">&plus;</button>
+				<button id="increase-brush-size-large-${this.id}" title="Radius vergrößern">&plus;&plus;</button>
+				<button class="red active" id="red-${this.id}" title="Farbe Rot">Rot</button>
+				<button class="blue" id="blue-${this.id}" title="Farbe Blau">Blau</button>
+				<button class="green" id="green-${this.id}" title="Farbe Grün">Grün</button>
 			</div>
 		`);
 		const clearButton = document.getElementById(`clear-button-${this.id}`);
@@ -169,11 +178,13 @@ H5P.DrawingBoard = (function (_$) {
 			}
 		};
 
-		$container.append(`
-			<div class="help-container">
-				<p>Um das Bild zu speichern, Rechtsklick auf die Zeichenfläche -> Bild speichern als...</p>
-			</div>
-		`);
+		if (subDescription) {
+			$container.append(`
+				<div class="help-container">
+					<p>${subDescription}</p>
+				</div>
+			`);
+		}
 	};
 
 	return C;
