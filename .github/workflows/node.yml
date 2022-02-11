@@ -37,9 +37,14 @@ jobs:
       - run: npm ci
       - run: npm run release
       - run: ls -l -a ./output
+      # commit message since last tag
+      # - run: git log --pretty=format:"%s" $(git describe --tags --abbrev=0 @^)..@ > changelog.txt
+      # append ' - ' to each commit in changelog
+      # - run: sed -i 's/^/ - /' changelog.txt 
       - name: GH Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           fail_on_unmatched_files: true
+          generate_release_notes: true
           files: ./output/**/*.h5p

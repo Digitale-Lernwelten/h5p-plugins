@@ -1,3 +1,4 @@
 node_modules/
 output/
 *.h5p
+changelog.txt
