@@ -2,6 +2,11 @@ name: Node.js CI
 
 on:
   push:
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
+      - 'assets/**'
+      - 'docker-compose.yml'
     branches: [ main ]
     tags:
       - 'v[0-9].[0-9]+.[0-9]+'
