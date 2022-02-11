@@ -29,7 +29,7 @@ const log = (plugin, ...message) => {
 			const pluginDir = path.join('./plugins', plugin);
 			const libFilePath = path.join('./plugins', plugin, 'library.json');
 			const libFile = await fs.readJSON(libFilePath);
-			const {machineName, title, majorVersion, minorVersion, license} = libFile;
+			const {machineName, title, majorVersion, minorVersion} = libFile;
 
 			const h5p = {
 				mainLibrary: machineName,
@@ -42,8 +42,8 @@ const log = (plugin, ...message) => {
 						minorVersion,
 					},
 				],
-				license,
-				licenseExtras: MIT_LICENSE,
+				// license,
+				// licenseExtras: MIT_LICENSE,
 				embedTypes: ['div', 'iframe'],
 				runnable: 1,
 			};
