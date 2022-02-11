@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -20,3 +19,23 @@ jobs:
     - run: npm ci
     - run: npm audit --package-lock-only
     - run: npm run lint
+
+  release:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.17
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run release
+      - run: ls -l -a ./output
+      - name: GH Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          fail_on_unmatched_files: true
+          files: ./output/**/*.h5p
