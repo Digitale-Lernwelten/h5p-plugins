@@ -211,9 +211,34 @@ H5P.DrawingBoard = (function (_$) {
 
 		let prevX = 0;
 		let prevY = 0;
+		canvas.ontouchstart = e => {
+			e.preventDefault();
+			isDrawing = true;
+			const {x, y} = getMousePosition(canvas, e.touches[0]);
+			prevX = x;
+			prevY = y;
+		};
 
 		canvas.onmousemove = e => {
 			const {x, y} = getMousePosition(canvas, e);
+			if (isDrawing) {
+				ctx.beginPath();
+				ctx.lineCap = 'round';
+				ctx.lineWidth = brushSize;
+				ctx.strokeStyle = color;
+				ctx.moveTo(prevX, prevY);
+				ctx.lineTo(x, y);
+				ctx.stroke();
+				ctx.closePath();
+			}
+
+			prevX = x;
+			prevY = y;
+		};
+
+		canvas.ontouchmove = e => {
+			e.preventDefault();
+			const {x, y} = getMousePosition(canvas, e.touches[0]);
 			if (isDrawing) {
 				ctx.beginPath();
 				ctx.lineCap = 'round';
@@ -233,6 +258,13 @@ H5P.DrawingBoard = (function (_$) {
 			if (e.button === 0) {
 				isDrawing = false;
 			}
+		};
+
+		canvas.ontouchend = e => {
+			e.preventDefault();
+			isDrawing = false;
+			prevX = 0;
+			prevY = 0;
 		};
 
 		if (subDescription) {
