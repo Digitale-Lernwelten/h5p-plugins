@@ -199,7 +199,22 @@ H5P.DrawingBoard = (function (_$) {
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 		};
 
-		clearCanvas();
+		const LOCAL_STORAGE_KEY = `h5p-drawing-board-canvas-storage-${id}`;
+
+		const saveCanvas = () => {
+			localStorage.setItem(LOCAL_STORAGE_KEY, canvas.toDataURL());
+		};
+
+		const storedCanvas = localStorage.getItem(LOCAL_STORAGE_KEY);
+		if (storedCanvas === null) {
+			clearCanvas();
+		} else {
+			const img = new Image();
+			img.src = storedCanvas;
+			img.onload = () => {
+				ctx.drawImage(img, 0, 0);
+			};
+		}
 
 		let isDrawing = false;
 
@@ -257,6 +272,7 @@ H5P.DrawingBoard = (function (_$) {
 		canvas.onmouseup = e => {
 			if (e.button === 0) {
 				isDrawing = false;
+				saveCanvas();
 			}
 		};
 
@@ -265,6 +281,7 @@ H5P.DrawingBoard = (function (_$) {
 			isDrawing = false;
 			prevX = 0;
 			prevY = 0;
+			saveCanvas();
 		};
 
 		if (subDescription) {
