@@ -17,6 +17,7 @@
       { "path": "drawing-board.js" }
     ],
     "preloadedCss": [
-      {"path": "drawing-board.css"}
+      {"path": "drawing-board.css"},
+      {"path": "./fonts/fonts.css"}
     ]
   }

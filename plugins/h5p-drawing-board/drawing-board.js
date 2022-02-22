@@ -21,7 +21,6 @@ H5P.DrawingBoard = (function (_$) {
 	 * @param {Object} options
 	 * @param {string} options.header
 	 * @param {string} options.description
-	 * @param {string} options.subDescription
 	 * @param {number} id
 	 */
 	function C(options, id) {
@@ -31,13 +30,13 @@ H5P.DrawingBoard = (function (_$) {
 
 	C.prototype.coreColors = [
 		'#000000',
-		'#FFFFFF',
 		'#E2E4E7',
-		'#AAAFB7',
-		'#3E444D',
 		'#FF0000',
+		'#FFFFFF',
+		'#AAAFB7',
 		'#FFFF00',
 		'#00ff00',
+		'#3E444D',
 		'#002BFF',
 	];
 
@@ -75,7 +74,7 @@ H5P.DrawingBoard = (function (_$) {
    	 */
 	C.prototype.attach = function ($container) {
 		$container.addClass('h5p-drawing-board');
-		const {header, description, subDescription} = this.options;
+		const {header, description} = this.options;
 		if (header) {
 			$container.append(
 				`<h1 class="drawing-board-title">${header}</h1>`,
@@ -150,6 +149,10 @@ H5P.DrawingBoard = (function (_$) {
 			}
 
 			d.style.backgroundColor = c;
+			if (c === '#00ff00') {
+				d.style.visibility = 'hidden';
+			}
+
 			d.onclick = () => {
 				color = c;
 				this.clearActiveColors();
@@ -284,13 +287,32 @@ H5P.DrawingBoard = (function (_$) {
 			saveCanvas();
 		};
 
-		if (subDescription) {
-			$container.append(`
-				<div class="help-container">
-					<p>${subDescription}</p>
-				</div>
-			`);
-		}
+		$container.append(`
+			<div class="bottom-controls-container">
+				<button id="clear-button-${id}" class="bottom-button">Neu</button>
+				<button id="save-button-${id}" class="bottom-button">Speichern</button>
+			</div>
+		`);
+
+		const clearButton = document.getElementById(`clear-button-${id}`);
+
+		clearButton.onclick = () => {
+			clearCanvas();
+			saveCanvas();
+		};
+
+		const saveButton = document.getElementById(`save-button-${id}`);
+
+		saveButton.onclick = () => {
+			saveCanvas();
+			// https://stackoverflow.com/a/58652379
+			const downloadLink = document.createElement('a');
+			downloadLink.setAttribute('download', 'zeichnung.png');
+			const dataURL = canvas.toDataURL('image/png');
+			const url = dataURL.replace(/^data:image\/png/, 'data:application/octet-stream');
+			downloadLink.setAttribute('href', url);
+			downloadLink.click();
+		};
 	};
 
 	return C;
