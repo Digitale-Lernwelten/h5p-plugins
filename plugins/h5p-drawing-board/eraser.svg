@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="116.265" height="129.809" viewBox="0 0 116.265 129.809">
+  <defs>
+    <filter id="Rechteck_219" x="0" y="0" width="116.265" height="129.809" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Gruppe_193" data-name="Gruppe 193" transform="translate(-7452.887 13914.371) rotate(-150)">
+    <g transform="matrix(-0.87, 0.5, -0.5, -0.87, 502.8, 15776.64)" filter="url(#Rechteck_219)">
+      <g id="Rechteck_219-2" data-name="Rechteck 219" transform="translate(58.77 117.81) rotate(-150)" fill="#bfbfbf" stroke="#707070" stroke-width="4">
+        <rect width="54" height="91" rx="10" stroke="none"/>
+        <rect x="2" y="2" width="50" height="87" rx="8" fill="none"/>
+      </g>
+    </g>
+    <g id="Rechteck_220" data-name="Rechteck 220" transform="translate(447 15795) rotate(180)" fill="#fff" stroke="#707070" stroke-width="4">
+      <path d="M10,0H44A10,10,0,0,1,54,10V55a0,0,0,0,1,0,0H0a0,0,0,0,1,0,0V10A10,10,0,0,1,10,0Z" stroke="none"/>
+      <path d="M10,2H44a8,8,0,0,1,8,8V51a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V10A8,8,0,0,1,10,2Z" fill="none"/>
+    </g>
+  </g>
+</svg>

@@ -5,6 +5,6 @@ services:
     image: sr258/drupal-h5p-docker:latest
     ports: 
       - 8080:80
-    restart: always
+    restart: unless-stopped
     volumes: # 'symlink' the plugins directory to the h5p dev directory
       - ./plugins/:/var/www/html/sites/default/files/h5p/development

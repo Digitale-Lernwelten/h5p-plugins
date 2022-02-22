@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="113.021" height="148.951" viewBox="0 0 113.021 148.951">
+  <defs>
+    <filter id="Rechteck_221" x="22.601" y="0" width="90.42" height="110.714" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Polygon_19" x="0" y="73.537" width="71.089" height="75.414" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-2"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Gruppe_194" data-name="Gruppe 194" transform="translate(-7339.246 13926.294) rotate(-150)">
+    <g transform="matrix(-0.87, 0.5, -0.5, -0.87, 607.17, 15730.15)" filter="url(#Rechteck_221)">
+      <g id="Rechteck_221-2" data-name="Rechteck 221" transform="translate(59.94 98.71) rotate(-150)" fill="#bfbfbf" stroke="#5e5e5e" stroke-width="4">
+        <path d="M2,0H30.721a2,2,0,0,1,2,2V78.165a10,10,0,0,1-10,10H10a10,10,0,0,1-10-10V2A2,2,0,0,1,2,0Z" stroke="none"/>
+        <path d="M2,2H30.721a0,0,0,0,1,0,0V78.165a8,8,0,0,1-8,8H10a8,8,0,0,1-8-8V2A0,0,0,0,1,2,2Z" fill="none"/>
+      </g>
+    </g>
+    <g transform="matrix(-0.87, 0.5, -0.5, -0.87, 607.17, 15730.15)" filter="url(#Polygon_19)">
+      <g id="Polygon_19-2" data-name="Polygon 19" transform="translate(38.91 136.95) rotate(-150)" fill="#fff">
+        <path d="M 31.65952491760254 44.3548583984375 L 2.879384994506836 44.3548583984375 L 17.26945495605469 5.728867530822754 C 17.26945114135742 5.728877544403076 17.26945114135742 5.728877544403076 17.26945304870605 5.728877544403076 L 31.6595344543457 44.3548583984375 C 31.65953063964844 44.35485458374023 31.6595287322998 44.35485458374023 31.65952682495117 44.3548583984375 C 31.65952301025391 44.3548583984375 31.65951919555664 44.3548583984375 31.65951538085938 44.3548583984375 L 31.65952491760254 44.3548583984375 Z" stroke="none"/>
+        <path d="M 17.26945686340332 11.45774841308594 L 5.758760452270508 42.3548583984375 L 28.7801456451416 42.3548583984375 L 17.26945686340332 11.45774841308594 M 17.26945495605469 3.728866577148438 C 18.04487800598145 3.728866577148438 18.8203010559082 4.162792205810547 19.14361572265625 5.030647277832031 L 33.53369522094727 43.65663909912109 C 34.02055358886719 44.96347808837891 33.05411529541016 46.3548469543457 31.65952491760254 46.3548583984375 L 2.879384994506836 46.3548583984375 C 1.484794616699219 46.3548469543457 0.5183563232421875 44.96347808837891 1.005214691162109 43.65663909912109 L 15.39529418945312 5.030647277832031 C 15.7186107635498 4.162792205810547 16.49403190612793 3.728866577148438 17.26945495605469 3.728866577148438 Z" stroke="none" fill="#5e5e5e"/>
+      </g>
+    </g>
+    <path id="Polygon_18" data-name="Polygon 18" d="M6.3,5.227a2,2,0,0,1,3.764,0L15.4,20.046a2,2,0,0,1-1.882,2.677H2.846A2,2,0,0,1,.964,20.046Z" transform="translate(514.089 15631)" fill="#5e5e5e"/>
+  </g>
+</svg>

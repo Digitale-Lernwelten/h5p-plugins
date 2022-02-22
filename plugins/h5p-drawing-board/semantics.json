@@ -12,12 +12,5 @@
     "type": "text",
     "default": "Zeichne etwas!",
     "description": "The description displayed above the drawing board."
-  },
-  {
-    "label": "Bottom Description",
-    "name": "subDescription",
-    "type": "text",
-    "default": "Um das Bild zu speichern, Rechtsklick auf die Zeichenfläche -> Bild speichern als...",
-    "description": "The description displayed below the drawing board."
   }
 ]
