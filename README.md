@@ -28,6 +28,11 @@ Docker image taken from [sr258/drupal-h5p-docker](https://github.com/sr258/drupa
 
 ### H5P Drawing Board
 
-A simple canvas drawing board.
+A simple canvas drawing board.  
+Features: 
+- several colors
+- 4 brush sizes
+- persistent to `localStorage`
+- export as png
 
 ![image](./assets/drawing-board.png)
