@@ -202,7 +202,9 @@ H5P.DrawingBoard = (function (_$) {
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 		};
 
-		const LOCAL_STORAGE_KEY = `h5p-drawing-board-canvas-storage-${id}`;
+		const {hostname} = window.location;
+
+		const LOCAL_STORAGE_KEY = `${hostname}-h5p-drawing-board-canvas-storage-${id}`;
 
 		const saveCanvas = () => {
 			localStorage.setItem(LOCAL_STORAGE_KEY, canvas.toDataURL());

@@ -25,7 +25,7 @@
   padding: 5px;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   background-color: #dcdcdc;
 }
@@ -148,20 +148,18 @@
 }
 
 .color-container > .core-colors {
-  max-width: 40%;
   margin-right: 20px;
   height: 100%;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   align-items: center;
 }
 
 .color-container > .extended-colors {
-  max-width: 60%;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
-  align-items: center;
   height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  align-items: center;
 }
