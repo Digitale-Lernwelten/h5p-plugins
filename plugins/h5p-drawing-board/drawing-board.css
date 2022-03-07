@@ -21,7 +21,6 @@
 .h5p-drawing-board > .drawing-board-controls {
   border: 5px solid #dcdcdc;
   border-bottom: none;
-  margin-top: 3px;
   padding: 5px;
   display: flex;
   flex-direction: row;
