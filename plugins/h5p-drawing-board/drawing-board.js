@@ -21,6 +21,7 @@ H5P.DrawingBoard = (function (_$) {
 	 * @param {Object} options
 	 * @param {string} options.header
 	 * @param {string} options.description
+	 * @param {boolean} options.hideText
 	 * @param {number} id
 	 */
 	function C(options, id) {
@@ -74,17 +75,19 @@ H5P.DrawingBoard = (function (_$) {
    	 */
 	C.prototype.attach = function ($container) {
 		$container.addClass('h5p-drawing-board');
-		const {header, description} = this.options;
-		if (header) {
-			$container.append(
-				`<h1 class="drawing-board-title">${header}</h1>`,
-			);
-		}
+		const {header, description, hideText} = this.options;
+		if (!hideText) {
+			if (header) {
+				$container.append(
+					`<h1 class="drawing-board-title">${header}</h1>`,
+				);
+			}
 
-		if (description) {
-			$container.append(
-				`<p class="drawing-board-description">${description}</p>`,
-			);
+			if (description) {
+				$container.append(
+					`<p class="drawing-board-description">${description}</p>`,
+				);
+			}
 		}
 
 		const {id} = this;
@@ -93,10 +96,10 @@ H5P.DrawingBoard = (function (_$) {
 				<div id="pen-button-${id}" class="tool-button pen-button active"></div>
 				<div id="eraser-button-${id}" class="tool-button eraser-button"></div>
 				<div id="thickness-container-${id}" class="thickness-container">
-					<div id="thic-${id}" class="active" />
-					<div id="thicc-${id}" />
-					<div id="thiccc-${id}" />
-					<div id="thicccc-${id}" />
+					<div id="thick-1-${id}" class="active" />
+					<div id="thick-2-${id}" />
+					<div id="thick-3-${id}" />
+					<div id="thick-4-${id}" />
 				</div>
 				<div id="color-container-${id}" class="color-container">
 					<div id="core-colors-${id}" class="core-colors"></div>
@@ -124,10 +127,10 @@ H5P.DrawingBoard = (function (_$) {
 		};
 
 		const thicknessButtons = [
-			document.getElementById(`thic-${id}`),
-			document.getElementById(`thicc-${id}`),
-			document.getElementById(`thiccc-${id}`),
-			document.getElementById(`thicccc-${id}`),
+			document.getElementById(`thick-1-${id}`),
+			document.getElementById(`thick-2-${id}`),
+			document.getElementById(`thick-3-${id}`),
+			document.getElementById(`thick-4-${id}`),
 		];
 		const brushThicknesses = [3, 8, 12, 20];
 		let brushSize = brushThicknesses[0];
@@ -239,17 +242,21 @@ H5P.DrawingBoard = (function (_$) {
 			prevY = y;
 		};
 
+		const draw = (x, y) => {
+			ctx.beginPath();
+			ctx.lineCap = 'round';
+			ctx.lineWidth = brushSize;
+			ctx.strokeStyle = color;
+			ctx.moveTo(prevX, prevY);
+			ctx.lineTo(x, y);
+			ctx.stroke();
+			ctx.closePath();
+		};
+
 		canvas.onmousemove = e => {
 			const {x, y} = getMousePosition(canvas, e);
 			if (isDrawing) {
-				ctx.beginPath();
-				ctx.lineCap = 'round';
-				ctx.lineWidth = brushSize;
-				ctx.strokeStyle = color;
-				ctx.moveTo(prevX, prevY);
-				ctx.lineTo(x, y);
-				ctx.stroke();
-				ctx.closePath();
+				draw(x, y);
 			}
 
 			prevX = x;
@@ -260,14 +267,7 @@ H5P.DrawingBoard = (function (_$) {
 			e.preventDefault();
 			const {x, y} = getMousePosition(canvas, e.touches[0]);
 			if (isDrawing) {
-				ctx.beginPath();
-				ctx.lineCap = 'round';
-				ctx.lineWidth = brushSize;
-				ctx.strokeStyle = color;
-				ctx.moveTo(prevX, prevY);
-				ctx.lineTo(x, y);
-				ctx.stroke();
-				ctx.closePath();
+				draw(x, y);
 			}
 
 			prevX = x;

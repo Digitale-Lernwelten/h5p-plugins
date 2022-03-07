@@ -12,5 +12,12 @@
     "type": "text",
     "default": "Zeichne etwas!",
     "description": "The description displayed above the drawing board."
+  },
+  {
+    "label": "Hide Text",
+    "name": "hideText",
+    "type": "boolean",
+    "default": false,
+    "description": "Hide the Header & description above the drawing board"
   }
 ]
