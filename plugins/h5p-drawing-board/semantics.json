@@ -19,5 +19,12 @@
     "type": "boolean",
     "default": false,
     "description": "Hide the Header & description above the drawing board"
+  },
+  {
+    "label": "Background Image",
+    "name": "image",
+    "type": "image",
+    "optional": true,
+    "description": "Background for the canvas. Note that the image will be scaled to fit the canvas with no regards to the aspect ratio."
   }
 ]

@@ -3,7 +3,7 @@
     "title": "Drawing Board",
     "description": "Displays a simple drawing board",
     "majorVersion": 1,
-    "minorVersion": 2,
+    "minorVersion": 3,
     "patchVersion": 3,
     "runnable": 1,
     "author": "Stefan Wintergerst",

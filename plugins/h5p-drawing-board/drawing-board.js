@@ -22,6 +22,7 @@ H5P.DrawingBoard = (function (_$) {
 	 * @param {string} options.header
 	 * @param {string} options.description
 	 * @param {boolean} options.hideText
+	 * @param {Object | undefined} options.image
 	 * @param {number} id
 	 */
 	function C(options, id) {
@@ -107,6 +108,7 @@ H5P.DrawingBoard = (function (_$) {
 				</div>
 			</div>
 		`);
+
 		let color = this.coreColors[0];
 
 		let lastColor = color;
@@ -199,10 +201,22 @@ H5P.DrawingBoard = (function (_$) {
 		ctx.imageSmoothingEnabled = true;
 		ctx.imageSmoothingQuality = 'high';
 
+		const drawBackgroundImage = () => {
+			const backgroundImagePath = H5P.getPath(this.options.image.path, id);
+			const img = new Image();
+			img.src = backgroundImagePath;
+			img.onload = () => {
+				ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
+			};
+		};
+
 		const clearCanvas = () => {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.fillStyle = 'rgba(255,255,255,1)';
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			if (this.options.image) {
+				drawBackgroundImage();
+			}
 		};
 
 		const {hostname} = window.location;
@@ -211,6 +225,10 @@ H5P.DrawingBoard = (function (_$) {
 
 		const saveCanvas = () => {
 			localStorage.setItem(LOCAL_STORAGE_KEY, canvas.toDataURL());
+		};
+
+		const clearStorage = () => {
+			localStorage.removeItem(LOCAL_STORAGE_KEY);
 		};
 
 		const storedCanvas = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -222,6 +240,10 @@ H5P.DrawingBoard = (function (_$) {
 			img.onload = () => {
 				ctx.drawImage(img, 0, 0);
 			};
+		}
+
+		if (this.options.image) {
+			drawBackgroundImage();
 		}
 
 		let isDrawing = false;
@@ -300,7 +322,7 @@ H5P.DrawingBoard = (function (_$) {
 
 		clearButton.onclick = () => {
 			clearCanvas();
-			saveCanvas();
+			clearStorage();
 		};
 
 		const saveButton = document.getElementById(`save-button-${id}`);
