@@ -104,7 +104,7 @@
 }
 
 .thickness-container > div.active {
-  box-shadow: 0 0 8px #00adff;
+  box-shadow: 0 0 14px #00adff;
 }
 
 .thickness-container > div:first-child {
@@ -143,7 +143,7 @@
 }
 
 .color-button.active {
-  box-shadow: 0 0 8px #00adff;
+  box-shadow: 0 0 14px #00adff;
 }
 
 .color-container > .core-colors {
