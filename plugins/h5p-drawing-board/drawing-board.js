@@ -315,6 +315,7 @@ H5P.DrawingBoard = (function (_$) {
 			<div class="bottom-controls-container">
 				<button id="clear-button-${id}" class="bottom-button">Neu</button>
 				<button id="save-button-${id}" class="bottom-button">Speichern</button>
+				<button id="fullscreen-button-${id}" class="bottom-button">Vollbild</button>
 			</div>
 		`);
 
@@ -323,6 +324,18 @@ H5P.DrawingBoard = (function (_$) {
 		clearButton.onclick = () => {
 			clearCanvas();
 			clearStorage();
+		};
+
+		const fullscreenButton = document.getElementById(`fullscreen-button-${id}`);
+
+		fullscreenButton.onclick = () => {
+			if (H5P.isFullscreen) {
+				H5P.exitFullScreen();
+				fullscreenButton.innerHTML = 'Vollbildmodus';
+			} else {
+				H5P.fullScreen($container, this);
+				fullscreenButton.innerHTML = 'Vollbildmodus beenden';
+			}
 		};
 
 		const saveButton = document.getElementById(`save-button-${id}`);

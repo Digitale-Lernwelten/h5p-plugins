@@ -1,8 +1,13 @@
 .h5p-drawing-board {
-  /* border: 1px solid red; */
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+.h5p-drawing-board.h5p-fullscreen {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: auto !important;
 }
 
 .h5p-drawing-board * {
