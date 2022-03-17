@@ -21,6 +21,14 @@
     "description": "Hide the Header & description above the drawing board"
   },
   {
+    "label": "Background Color",
+    "name": "backgroundColor",
+    "type": "text",
+    "default": "white",
+    "optional": true,
+    "description": "The background color of the canvas. Note: setting a background image will ignore the background color. Valid colors can be found here: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#color_keywords "
+  },
+  {
     "label": "Background Image",
     "name": "image",
     "type": "image",

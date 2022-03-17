@@ -23,6 +23,7 @@ H5P.DrawingBoard = (function (_$) {
 	 * @param {string} options.description
 	 * @param {boolean} options.hideText
 	 * @param {Object | undefined} options.image
+	 * @param {string | undefined} options.backgroundColor
 	 * @param {number} id
 	 */
 	function C(options, id) {
@@ -77,21 +78,24 @@ H5P.DrawingBoard = (function (_$) {
 	C.prototype.attach = function ($container) {
 		$container.addClass('h5p-drawing-board');
 		const {header, description, hideText} = this.options;
+		const {id} = this;
 		if (!hideText) {
 			if (header) {
 				$container.append(
-					`<h1 class="drawing-board-title">${header}</h1>`,
+					`<h1 id="drawing-board-title-${id}" class="drawing-board-title">${header}</h1>`,
 				);
 			}
 
 			if (description) {
 				$container.append(
-					`<p class="drawing-board-description">${description}</p>`,
+					`<p id="drawing-board-description-${id}" class="drawing-board-description">${description}</p>`,
 				);
 			}
 		}
 
-		const {id} = this;
+		const title = document.getElementById(`drawing-board-title-${id}`);
+		const descr = document.getElementById(`drawing-board-description-${id}`);
+
 		$container.append(`
 			<div id="control-container-${id}" class="drawing-board-controls">
 				<div id="pen-button-${id}" class="tool-button pen-button active"></div>
@@ -112,12 +116,16 @@ H5P.DrawingBoard = (function (_$) {
 		let color = this.coreColors[0];
 
 		let lastColor = color;
+		let isEraser = false;
+		let mode = 'pen';
 
 		const penButton = document.getElementById(`pen-button-${id}`);
 		penButton.onclick = () => {
 			eraserButton.classList.remove('active');
 			penButton.classList.add('active');
 			color = lastColor;
+			isEraser = false;
+			mode = 'pen';
 		};
 
 		const eraserButton = document.getElementById(`eraser-button-${id}`);
@@ -126,6 +134,8 @@ H5P.DrawingBoard = (function (_$) {
 			eraserButton.classList.add('active');
 			lastColor = color;
 			color = '#FFFFFF';
+			isEraser = true;
+			mode = 'eraser';
 		};
 
 		const thicknessButtons = [
@@ -141,6 +151,9 @@ H5P.DrawingBoard = (function (_$) {
 				this.clearActiveThickness();
 				brushSize = brushThicknesses[i];
 				t.classList.add('active');
+				if (mode === 'eraser') {
+					isEraser = true;
+				}
 			};
 		});
 
@@ -160,6 +173,8 @@ H5P.DrawingBoard = (function (_$) {
 
 			d.onclick = () => {
 				color = c;
+				isEraser = false;
+				mode = 'pen';
 				this.clearActiveColors();
 				d.classList.add('active');
 				penButton.classList.add('active');
@@ -176,6 +191,8 @@ H5P.DrawingBoard = (function (_$) {
 			d.style.backgroundColor = c;
 			d.classList.add('color-button');
 			d.onclick = () => {
+				isEraser = false;
+				mode = 'pen';
 				color = c;
 				this.clearActiveColors();
 				d.classList.add('active');
@@ -202,21 +219,21 @@ H5P.DrawingBoard = (function (_$) {
 		ctx.imageSmoothingQuality = 'high';
 
 		const drawBackgroundImage = () => {
-			const backgroundImagePath = H5P.getPath(this.options.image.path, id);
-			const img = new Image();
-			img.src = backgroundImagePath;
-			img.onload = () => {
-				ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
-			};
+			if (this.options.image) {
+				const backgroundImagePath = H5P.getPath(this.options.image.path, id);
+				canvas.style.background = `url(${backgroundImagePath})`;
+				canvas.style.backgroundSize = 'contain';
+			} else if (this.options.backgroundColor) {
+				canvas.style.backgroundColor = this.options.backgroundColor;
+			} else {
+				ctx.fillStyle = 'rgba(255, 255, 255, 1)';
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+			}
 		};
 
 		const clearCanvas = () => {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.fillStyle = 'rgba(255,255,255,1)';
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
-			if (this.options.image) {
-				drawBackgroundImage();
-			}
+			drawBackgroundImage();
 		};
 
 		const {hostname} = window.location;
@@ -242,9 +259,7 @@ H5P.DrawingBoard = (function (_$) {
 			};
 		}
 
-		if (this.options.image) {
-			drawBackgroundImage();
-		}
+		drawBackgroundImage();
 
 		let isDrawing = false;
 
@@ -271,6 +286,7 @@ H5P.DrawingBoard = (function (_$) {
 			ctx.strokeStyle = color;
 			ctx.moveTo(prevX, prevY);
 			ctx.lineTo(x, y);
+			ctx.globalCompositeOperation = isEraser ? 'destination-out' : 'source-over';
 			ctx.stroke();
 			ctx.closePath();
 		};
@@ -299,6 +315,10 @@ H5P.DrawingBoard = (function (_$) {
 		canvas.onmouseup = e => {
 			if (e.button === 0) {
 				isDrawing = false;
+				if (isEraser) {
+					isEraser = false;
+				}
+
 				saveCanvas();
 			}
 		};
@@ -306,6 +326,10 @@ H5P.DrawingBoard = (function (_$) {
 		canvas.ontouchend = e => {
 			e.preventDefault();
 			isDrawing = false;
+			if (isEraser) {
+				isEraser = false;
+			}
+
 			prevX = 0;
 			prevY = 0;
 			saveCanvas();
@@ -331,24 +355,69 @@ H5P.DrawingBoard = (function (_$) {
 		fullscreenButton.onclick = () => {
 			if (H5P.isFullscreen) {
 				H5P.exitFullScreen();
-				fullscreenButton.innerHTML = 'Vollbildmodus';
 			} else {
 				H5P.fullScreen($container, this);
-				fullscreenButton.innerHTML = 'Vollbildmodus beenden';
 			}
 		};
+
+		this.on('enterFullScreen', () => {
+			fullscreenButton.innerHTML = 'Vollbildmodus beenden';
+			title.style.display = 'none';
+			descr.style.display = 'none';
+		});
+		this.on('exitFullScreen', () => {
+			fullscreenButton.innerHTML = 'Vollbildmodus';
+			title.style.display = 'block';
+			descr.style.display = 'block';
+		});
 
 		const saveButton = document.getElementById(`save-button-${id}`);
 
 		saveButton.onclick = () => {
-			saveCanvas();
 			// https://stackoverflow.com/a/58652379
-			const downloadLink = document.createElement('a');
-			downloadLink.setAttribute('download', 'zeichnung.png');
-			const dataURL = canvas.toDataURL('image/png');
-			const url = dataURL.replace(/^data:image\/png/, 'data:application/octet-stream');
-			downloadLink.setAttribute('href', url);
-			downloadLink.click();
+			if (this.options.image) {
+				const downloadLink = document.createElement('a');
+				downloadLink.setAttribute('download', 'zeichnung.png');
+				const canvasData = canvas.toDataURL('image/png');
+				const backgroundImagePath = H5P.getPath(this.options.image.path, id);
+				const bgImg = new Image();
+				bgImg.src = backgroundImagePath;
+				bgImg.onload = () => {
+					ctx.globalCompositeOperation = 'source-over';
+					ctx.drawImage(bgImg, 0, 0, bgImg.width, bgImg.height, 0, 0, canvas.width, canvas.height);
+					const img = new Image();
+					img.src = canvasData;
+					img.onload = () => {
+						ctx.drawImage(img, 0, 0);
+						const dataURL = canvas.toDataURL('image/png');
+						const url = dataURL.replace(/^data:image\/png/, 'data:application/octet-stream');
+						downloadLink.setAttribute('href', url);
+						downloadLink.click();
+					};
+				};
+			} else if (this.options.backgroundColor) {
+				const downloadLink = document.createElement('a');
+				downloadLink.setAttribute('download', 'zeichnung.png');
+				const canvasData = canvas.toDataURL('image/png');
+				ctx.fillStyle = this.options.backgroundColor;
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+				const img = new Image();
+				img.src = canvasData;
+				img.onload = () => {
+					ctx.drawImage(img, 0, 0);
+					const dataURL = canvas.toDataURL('image/png');
+					const url = dataURL.replace(/^data:image\/png/, 'data:application/octet-stream');
+					downloadLink.setAttribute('href', url);
+					downloadLink.click();
+				};
+			} else {
+				const downloadLink = document.createElement('a');
+				downloadLink.setAttribute('download', 'zeichnung.png');
+				const canvasData = canvas.toDataURL('image/png');
+				const url = canvasData.replace(/^data:image\/png/, 'data:application/octet-stream');
+				downloadLink.setAttribute('href', url);
+				downloadLink.click();
+			}
 		};
 	};
 
