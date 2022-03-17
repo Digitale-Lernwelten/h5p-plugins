@@ -222,7 +222,7 @@ H5P.DrawingBoard = (function (_$) {
 			if (this.options.image) {
 				const backgroundImagePath = H5P.getPath(this.options.image.path, id);
 				canvas.style.background = `url(${backgroundImagePath})`;
-				canvas.style.backgroundSize = 'contain';
+				canvas.style.backgroundSize = 'cover';
 			} else if (this.options.backgroundColor) {
 				canvas.style.backgroundColor = this.options.backgroundColor;
 			} else {
