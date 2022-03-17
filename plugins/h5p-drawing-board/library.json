@@ -4,7 +4,7 @@
     "description": "Displays a simple drawing board",
     "majorVersion": 1,
     "minorVersion": 3,
-    "patchVersion": 8,
+    "patchVersion": 10,
     "runnable": 1,
     "author": "Stefan Wintergerst",
     "license": "MIT",

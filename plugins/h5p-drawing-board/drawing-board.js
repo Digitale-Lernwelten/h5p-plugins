@@ -24,6 +24,7 @@ H5P.DrawingBoard = (function (_$) {
 	 * @param {boolean} options.hideText
 	 * @param {Object | undefined} options.image
 	 * @param {string | undefined} options.backgroundColor
+	 * @param {string} options.fileName
 	 * @param {number} id
 	 */
 	function C(options, id) {
@@ -75,10 +76,14 @@ H5P.DrawingBoard = (function (_$) {
 	 * @memberof C
    	 * @param {JQuery<HTMLElement>} $container
    	 */
-	C.prototype.attach = function ($container) {
+	C.prototype.attach = async function ($container) {
+		const version = '0.0.1';
 		$container.addClass('h5p-drawing-board');
 		const {header, description, hideText} = this.options;
 		const {id} = this;
+		const {hostname} = window.location;
+		const LOCAL_STORAGE_KEY = `h5p-drawing-board-canvas-storage-${version}-${hostname}-${id}`;
+
 		if (!hideText) {
 			if (header) {
 				$container.append(
@@ -209,20 +214,29 @@ H5P.DrawingBoard = (function (_$) {
 
 		/** @type {HTMLCanvasElement} */
 		const canvas = document.getElementById(`drawing-canvas-${id}`);
-		// necessary to avoid blurryness
 		canvas.width = canvas.offsetWidth;
 		canvas.height = canvas.offsetHeight;
 		const ctx = canvas.getContext('2d');
-		// ctx.translate(0.5, 0.5);
-		// crank quality
 		ctx.imageSmoothingEnabled = true;
 		ctx.imageSmoothingQuality = 'high';
 
-		const drawBackgroundImage = () => {
+		const drawBackgroundImage = async () => {
 			if (this.options.image) {
 				const backgroundImagePath = H5P.getPath(this.options.image.path, id);
 				canvas.style.background = `url(${backgroundImagePath})`;
-				canvas.style.backgroundSize = 'cover';
+				canvas.style.backgroundSize = 'contain';
+				canvas.style.backgroundRepeat = 'no-repeat';
+
+				// scale image to canvas
+				// then adjust canvas to properly fit image
+				const t = new Image();
+				t.src = backgroundImagePath;
+				await t.decode();
+				const fac = canvas.width / t.width;
+				const w = Math.ceil(t.width * fac);
+				const h = Math.ceil(t.height * fac);
+				canvas.width = w;
+				canvas.height = h;
 			} else if (this.options.backgroundColor) {
 				canvas.style.backgroundColor = this.options.backgroundColor;
 			} else {
@@ -231,14 +245,25 @@ H5P.DrawingBoard = (function (_$) {
 			}
 		};
 
-		const clearCanvas = () => {
+		const clearCanvas = async () => {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			drawBackgroundImage();
+			await drawBackgroundImage();
 		};
 
-		const {hostname} = window.location;
+		const loadImage = async () => {
+			const storedCanvas = localStorage.getItem(LOCAL_STORAGE_KEY);
+			if (storedCanvas === null) {
+				await clearCanvas();
+			} else {
+				const img = new Image();
+				img.src = storedCanvas;
+				await img.decode();
+				ctx.drawImage(img, 0, 0);
+			}
+		};
 
-		const LOCAL_STORAGE_KEY = `${hostname}-h5p-drawing-board-canvas-storage-${id}`;
+		await drawBackgroundImage();
+		await loadImage();
 
 		const saveCanvas = () => {
 			localStorage.setItem(LOCAL_STORAGE_KEY, canvas.toDataURL());
@@ -247,19 +272,6 @@ H5P.DrawingBoard = (function (_$) {
 		const clearStorage = () => {
 			localStorage.removeItem(LOCAL_STORAGE_KEY);
 		};
-
-		const storedCanvas = localStorage.getItem(LOCAL_STORAGE_KEY);
-		if (storedCanvas === null) {
-			clearCanvas();
-		} else {
-			const img = new Image();
-			img.src = storedCanvas;
-			img.onload = () => {
-				ctx.drawImage(img, 0, 0);
-			};
-		}
-
-		drawBackgroundImage();
 
 		let isDrawing = false;
 
@@ -373,51 +385,37 @@ H5P.DrawingBoard = (function (_$) {
 
 		const saveButton = document.getElementById(`save-button-${id}`);
 
-		saveButton.onclick = () => {
+		saveButton.onclick = async () => {
+			const downloadLink = document.createElement('a');
+			downloadLink.setAttribute('download', 'zeichnung.png');
 			// https://stackoverflow.com/a/58652379
 			if (this.options.image) {
-				const downloadLink = document.createElement('a');
-				downloadLink.setAttribute('download', 'zeichnung.png');
 				const canvasData = canvas.toDataURL('image/png');
 				const backgroundImagePath = H5P.getPath(this.options.image.path, id);
 				const bgImg = new Image();
 				bgImg.src = backgroundImagePath;
-				bgImg.onload = () => {
-					ctx.globalCompositeOperation = 'source-over';
-					ctx.drawImage(bgImg, 0, 0, bgImg.width, bgImg.height, 0, 0, canvas.width, canvas.height);
-					const img = new Image();
-					img.src = canvasData;
-					img.onload = () => {
-						ctx.drawImage(img, 0, 0);
-						const dataURL = canvas.toDataURL('image/png');
-						const url = dataURL.replace(/^data:image\/png/, 'data:application/octet-stream');
-						downloadLink.setAttribute('href', url);
-						downloadLink.click();
-					};
-				};
+				await bgImg.decode();
+				ctx.globalCompositeOperation = 'source-over';
+				const fac = canvas.width / bgImg.width;
+				ctx.drawImage(bgImg, 0, 0, bgImg.width * fac, bgImg.height * fac);
+				const img = new Image();
+				img.src = canvasData;
+				await img.decode();
+				ctx.drawImage(img, 0, 0, img.width, img.height);
 			} else if (this.options.backgroundColor) {
-				const downloadLink = document.createElement('a');
-				downloadLink.setAttribute('download', 'zeichnung.png');
 				const canvasData = canvas.toDataURL('image/png');
 				ctx.fillStyle = this.options.backgroundColor;
 				ctx.fillRect(0, 0, canvas.width, canvas.height);
 				const img = new Image();
 				img.src = canvasData;
-				img.onload = () => {
-					ctx.drawImage(img, 0, 0);
-					const dataURL = canvas.toDataURL('image/png');
-					const url = dataURL.replace(/^data:image\/png/, 'data:application/octet-stream');
-					downloadLink.setAttribute('href', url);
-					downloadLink.click();
-				};
-			} else {
-				const downloadLink = document.createElement('a');
-				downloadLink.setAttribute('download', 'zeichnung.png');
-				const canvasData = canvas.toDataURL('image/png');
-				const url = canvasData.replace(/^data:image\/png/, 'data:application/octet-stream');
-				downloadLink.setAttribute('href', url);
-				downloadLink.click();
+				await img.decode();
+				ctx.drawImage(img, 0, 0);
 			}
+
+			const dataURL = canvas.toDataURL('image/png');
+			const url = dataURL.replace(/^data:image\/png/, 'data:application/octet-stream');
+			downloadLink.setAttribute('href', url);
+			downloadLink.click();
 		};
 	};
 
