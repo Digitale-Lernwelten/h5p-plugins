@@ -25,6 +25,7 @@ H5P.DrawingBoard = (function (_$) {
 	 * @param {Object | undefined} options.image
 	 * @param {string | undefined} options.backgroundColor
 	 * @param {string} options.fileName
+	 * @param {boolean} options.devMode
 	 * @param {number} id
 	 */
 	function C(options, id) {
@@ -72,26 +73,44 @@ H5P.DrawingBoard = (function (_$) {
 			.forEach(e => e.classList.remove('active'));
 	};
 
+	C.prototype.timenow = function () {
+		const pad = (n, s = 2) => (`${new Array(s).fill(0)}${n}`).slice(-s);
+		const d = new Date();
+
+		return `${pad(d.getFullYear(), 4)}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.${pad(d.getMilliseconds(), 3)}`;
+	};
+
+	C.prototype.log = function (...msg) {
+		if (this.options.devMode) {
+			console.log(`[${this.timenow()}]: `, ...msg);
+		}
+	};
+
 	/**
 	 * @memberof C
    	 * @param {JQuery<HTMLElement>} $container
    	 */
 	C.prototype.attach = async function ($container) {
-		const version = '0.0.1';
+		const version = '0.0.2';
+		const {majorVersion, minorVersion} = this.libraryInfo;
+		this.log(`initializing H5P Drawing Board (v${version} | ${majorVersion}.${minorVersion})`);
 		$container.addClass('h5p-drawing-board');
 		const {header, description, hideText} = this.options;
 		const {id} = this;
 		const {hostname} = window.location;
 		const LOCAL_STORAGE_KEY = `h5p-drawing-board-canvas-storage-${version}-${hostname}-${id}`;
-
+		this.log(`using localstorage key: ${LOCAL_STORAGE_KEY}`);
+		this.log(`initial container size: ${$container.width()}x${$container.height()}`);
 		if (!hideText) {
 			if (header) {
+				this.log('appending header');
 				$container.append(
 					`<h1 id="drawing-board-title-${id}" class="drawing-board-title">${header}</h1>`,
 				);
 			}
 
 			if (description) {
+				this.log('appending description');
 				$container.append(
 					`<p id="drawing-board-description-${id}" class="drawing-board-description">${description}</p>`,
 				);
@@ -131,6 +150,7 @@ H5P.DrawingBoard = (function (_$) {
 			color = lastColor;
 			isEraser = false;
 			mode = 'pen';
+			this.log(`swapped to ${mode} eraser`);
 		};
 
 		const eraserButton = document.getElementById(`eraser-button-${id}`);
@@ -141,6 +161,7 @@ H5P.DrawingBoard = (function (_$) {
 			color = '#FFFFFF';
 			isEraser = true;
 			mode = 'eraser';
+			this.log(`swapped to ${mode} eraser`);
 		};
 
 		const thicknessButtons = [
@@ -156,6 +177,7 @@ H5P.DrawingBoard = (function (_$) {
 				this.clearActiveThickness();
 				brushSize = brushThicknesses[i];
 				t.classList.add('active');
+				this.log(`switched to thickness: ${i}`);
 				if (mode === 'eraser') {
 					isEraser = true;
 				}
@@ -180,6 +202,7 @@ H5P.DrawingBoard = (function (_$) {
 				color = c;
 				isEraser = false;
 				mode = 'pen';
+				this.log(`switched color to: ${c}`);
 				this.clearActiveColors();
 				d.classList.add('active');
 				penButton.classList.add('active');
@@ -199,6 +222,7 @@ H5P.DrawingBoard = (function (_$) {
 				isEraser = false;
 				mode = 'pen';
 				color = c;
+				this.log(`switched color to: ${c}`);
 				this.clearActiveColors();
 				d.classList.add('active');
 				penButton.classList.add('active');
@@ -237,6 +261,7 @@ H5P.DrawingBoard = (function (_$) {
 				const h = Math.ceil(t.height * fac);
 				canvas.width = w;
 				canvas.height = h;
+				this.log(`resizing canvas to ${w}x${h}`);
 			} else if (this.options.backgroundColor) {
 				canvas.style.backgroundColor = this.options.backgroundColor;
 			} else {
@@ -252,9 +277,9 @@ H5P.DrawingBoard = (function (_$) {
 
 		const loadImage = async () => {
 			const storedCanvas = localStorage.getItem(LOCAL_STORAGE_KEY);
-			if (storedCanvas === null) {
-				await clearCanvas();
-			} else {
+			await drawBackgroundImage();
+			if (storedCanvas !== null) {
+				this.log('using stored canvas');
 				const img = new Image();
 				img.src = storedCanvas;
 				await img.decode();
@@ -262,15 +287,16 @@ H5P.DrawingBoard = (function (_$) {
 			}
 		};
 
-		await drawBackgroundImage();
 		await loadImage();
 
 		const saveCanvas = () => {
 			localStorage.setItem(LOCAL_STORAGE_KEY, canvas.toDataURL());
+			this.log('saved canvas to storage');
 		};
 
 		const clearStorage = () => {
 			localStorage.removeItem(LOCAL_STORAGE_KEY);
+			this.log('deleted canvas from storage');
 		};
 
 		let isDrawing = false;
@@ -278,6 +304,7 @@ H5P.DrawingBoard = (function (_$) {
 		canvas.onmousedown = e => {
 			if (e.button === 0) {
 				isDrawing = true;
+				this.log('[mouse]: enabled drawing mode');
 			}
 		};
 
@@ -289,9 +316,15 @@ H5P.DrawingBoard = (function (_$) {
 			const {x, y} = getMousePosition(canvas, e.touches[0]);
 			prevX = x;
 			prevY = y;
+			this.log('[touch]: enabled drawing mode');
 		};
 
+		/**
+		 * @param {number} x
+		 * @param {number} y
+		 */
 		const draw = (x, y) => {
+			this.log(`draw call: (${prevX.toFixed(3)}, ${prevY.toFixed(3)}) => (${x.toFixed(3)}, ${y.toFixed(3)})`);
 			ctx.beginPath();
 			ctx.lineCap = 'round';
 			ctx.lineWidth = brushSize;
@@ -332,6 +365,7 @@ H5P.DrawingBoard = (function (_$) {
 				}
 
 				saveCanvas();
+				this.log('[mouse]: disabled drawing mode');
 			}
 		};
 
@@ -345,6 +379,7 @@ H5P.DrawingBoard = (function (_$) {
 			prevX = 0;
 			prevY = 0;
 			saveCanvas();
+			this.log('[touch]: disabled drawing mode');
 		};
 
 		$container.append(`
@@ -373,11 +408,13 @@ H5P.DrawingBoard = (function (_$) {
 		};
 
 		this.on('enterFullScreen', () => {
+			this.log('entering fullscreen');
 			fullscreenButton.innerHTML = 'Vollbildmodus beenden';
 			title.style.display = 'none';
 			descr.style.display = 'none';
 		});
 		this.on('exitFullScreen', () => {
+			this.log('exiting fullscreen');
 			fullscreenButton.innerHTML = 'Vollbildmodus';
 			title.style.display = 'block';
 			descr.style.display = 'block';
@@ -417,6 +454,8 @@ H5P.DrawingBoard = (function (_$) {
 			downloadLink.setAttribute('href', url);
 			downloadLink.click();
 		};
+
+		this.log(`post-setup container size: ${$container.width()}x${$container.height()}`);
 	};
 
 	return C;

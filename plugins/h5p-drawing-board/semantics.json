@@ -34,5 +34,12 @@
     "type": "image",
     "optional": true,
     "description": "Background for the canvas. Note that the image will be scaled to fit the canvas with no regards to the aspect ratio."
+  },
+  {
+    "label": "Developer Mode",
+    "name": "devMode",
+    "type": "boolean",
+    "default": false,
+    "description": "Do not touch!"
   }
 ]
