@@ -278,12 +278,14 @@ H5P.DrawingBoard = (function (_$) {
 		const loadImage = async () => {
 			const storedCanvas = localStorage.getItem(LOCAL_STORAGE_KEY);
 			await drawBackgroundImage();
+			this.trigger('resize');
 			if (storedCanvas !== null) {
 				this.log('using stored canvas');
 				const img = new Image();
 				img.src = storedCanvas;
 				await img.decode();
 				ctx.drawImage(img, 0, 0);
+				this.trigger('resize');
 			}
 		};
 
