@@ -26,6 +26,9 @@ H5P.DrawingBoard = (function (_$) {
 	 * @param {string | undefined} options.backgroundColor
 	 * @param {string} options.fileName
 	 * @param {boolean} options.devMode
+	 * @param {string} options.buttonNew
+	 * @param {string} options.buttonSave
+	 * @param {string} options.buttonFulls
 	 * @param {number} id
 	 */
 	function C(options, id) {
@@ -95,7 +98,7 @@ H5P.DrawingBoard = (function (_$) {
 		const {majorVersion, minorVersion} = this.libraryInfo;
 		this.log(`initializing H5P Drawing Board (v${version} | ${majorVersion}.${minorVersion})`);
 		$container.addClass('h5p-drawing-board');
-		const {header, description, hideText} = this.options;
+		const {header, description, hideText, buttonNew, buttonSave, buttonFulls, buttonFullsExit} = this.options;
 		const {id} = this;
 		const {hostname} = window.location;
 		const LOCAL_STORAGE_KEY = `h5p-drawing-board-canvas-storage-${version}-${hostname}-${id}`;
@@ -386,9 +389,9 @@ H5P.DrawingBoard = (function (_$) {
 
 		$container.append(`
 			<div class="bottom-controls-container">
-				<button id="clear-button-${id}" class="bottom-button">Neu</button>
-				<button id="save-button-${id}" class="bottom-button">Speichern</button>
-				<button id="fullscreen-button-${id}" class="bottom-button">Vollbild</button>
+				<button id="clear-button-${id}" class="bottom-button">${buttonNew}</button>
+				<button id="save-button-${id}" class="bottom-button">${buttonSave}</button>
+				<button id="fullscreen-button-${id}" class="bottom-button">${buttonFulls}</button>
 			</div>
 		`);
 
@@ -411,13 +414,13 @@ H5P.DrawingBoard = (function (_$) {
 
 		this.on('enterFullScreen', () => {
 			this.log('entering fullscreen');
-			fullscreenButton.innerHTML = 'Vollbildmodus beenden';
+			fullscreenButton.innerHTML = buttonFullsExit;
 			title.style.display = 'none';
 			descr.style.display = 'none';
 		});
 		this.on('exitFullScreen', () => {
 			this.log('exiting fullscreen');
-			fullscreenButton.innerHTML = 'Vollbildmodus';
+			fullscreenButton.innerHTML = buttonFulls;
 			title.style.display = 'block';
 			descr.style.display = 'block';
 		});

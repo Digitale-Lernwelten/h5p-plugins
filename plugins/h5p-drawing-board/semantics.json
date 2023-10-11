@@ -41,5 +41,33 @@
     "type": "boolean",
     "default": false,
     "description": "Do not touch!"
+  },
+  {
+    "label": "Bezeichung Button Neu",
+    "name": "buttonNew",
+    "type": "text",
+    "default": "Neu",
+    "description": "rename the Button New"
+  },
+  {
+    "label": "Bezeichung Button Speichern",
+    "name": "buttonSave",
+    "type": "text",
+    "default": "Speichern",
+    "description": "rename the Button Save"
+  },
+  {
+    "label": "Bezeichung Button Vollbild",
+    "name": "buttonFulls",
+    "type": "text",
+    "default": "Vollbild",
+    "description": "rename the Button Fullscreen"
+  },
+  {
+    "label": "Bezeichung Button Vollbild beenden",
+    "name": "buttonFullsExit",
+    "type": "text",
+    "default": "Vollbild beenden",
+    "description": "rename the Button exit Fullscreen"
   }
 ]
