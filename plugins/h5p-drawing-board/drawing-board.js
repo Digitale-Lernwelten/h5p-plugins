@@ -461,6 +461,8 @@ H5P.DrawingBoard = (function (_$) {
 		};
 
 		this.log(`post-setup container size: ${$container.width()}x${$container.height()}`);
+		this.trigger('resize');
+		setTimeout(() => this.trigger('resize'), 1000);
 	};
 
 	return C;
