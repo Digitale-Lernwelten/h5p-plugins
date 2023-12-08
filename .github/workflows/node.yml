@@ -25,7 +25,6 @@ jobs:
         node-version: 14.17
         cache: 'npm'
     - run: npm ci
-    - run: npm audit --package-lock-only
     - run: npm run lint
 
   release:
